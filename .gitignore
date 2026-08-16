@@ -1,0 +1,28 @@
+node_modules/
+/node-ogrenme/
+target/
+_out/
+gen/
+coverage/
+
+# Local runtime and test artifacts
+*.log
+.env
+.env.*
+!.env.example
+
+.cdsrc-private.json
+default-*.json
+*.sqlite
+
+# MTA
+mta_archives/
+*_mta_build_tmp
+*.mtar
+
+# Other
+.DS_Store
+Thumbs.db
+
+# @cap-js/cds-typer
+@cds-models
