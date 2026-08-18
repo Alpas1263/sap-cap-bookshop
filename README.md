@@ -1,5 +1,5 @@
 ## Gereksinimler
-12
+
 - Node.js 22 veya üzeri (Node.js 24 LTS önerilir)
 - npm
 - `cds watch` komutunu doğrudan kullanmak için isteğe bağlı global `@sap/cds-dk`
