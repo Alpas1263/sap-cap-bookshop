@@ -1,7 +1,3 @@
-# SAP CAP Bookshop
-
-SAP Cloud Application Programming Model (CAP) ile Node.js üzerinde geliştirilmiş örnek bir kitap mağazası servisidir. Proje; kitap, yazar ve tür veri modelini, başlangıç verilerini, yönetim/katalog OData servislerini, deklaratif veri doğrulamalarını ve stok düşüren özel sipariş mantığını içerir.
-
 ## Gereksinimler
 
 - Node.js 22 veya üzeri (Node.js 24 LTS önerilir)
