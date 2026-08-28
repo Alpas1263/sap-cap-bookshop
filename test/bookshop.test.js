@@ -3,8 +3,7 @@ import { after, before, test } from 'node:test'
 import { spawn } from 'node:child_process'
 import { once } from 'node:events'
 
-const port = 4005
-const baseUrl = `http://127.0.0.1:${port}`
+let baseUrl
 let server
 
 async function waitForServer() {
@@ -27,8 +26,17 @@ async function json(path, options) {
 before(async () => {
   server = spawn(process.execPath, ['node_modules/@sap/cds/bin/serve.js'], {
     cwd: process.cwd(),
-    env: { ...process.env, PORT: String(port), NODE_ENV: 'test' },
+    env: { ...process.env, PORT: '0', NODE_ENV: 'test' },
     stdio: ['ignore', 'pipe', 'pipe']
+  })
+
+  baseUrl = await new Promise((resolve, reject) => {
+    const onData = data => {
+      const match = data.toString().match(/server listening on.*url: 'http:\/\/localhost:(\d+)'/)
+      if (match) resolve(`http://127.0.0.1:${match[1]}`)
+    }
+    server.stdout.on('data', onData)
+    server.once('exit', code => reject(new Error(`CAP test server exited with code ${code}`)))
   })
   await waitForServer()
 })

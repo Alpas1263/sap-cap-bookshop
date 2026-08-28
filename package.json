@@ -13,5 +13,24 @@
     "watch": "cds watch",
     "test": "node --test"
   },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": {
+          "url": "db.sqlite"
+        }
+      }
+    },
+    "[test]": {
+      "requires": {
+        "db": {
+          "credentials": {
+            "url": ":memory:"
+          }
+        }
+      }
+    }
+  },
   "private": true
 }

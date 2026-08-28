@@ -3,8 +3,8 @@
   "tasks": [
     {
       "type": "shell",
-      "label": "cds watch",
-      "command": "cds watch",
+      "label": "npm run watch",
+      "command": "npm run watch",
     }
   ]
 }
