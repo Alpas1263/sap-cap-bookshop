@@ -32,6 +32,10 @@ npm start
 
 Uygulama varsayılan olarak <http://localhost:4004> adresinde açılır. Ana sayfa kullanılabilir servisleri ve OData metadata bağlantılarını listeler.
 
+## Kitap Yönetimi Arayüzü
+
+Sunucu çalıştıktan sonra <http://localhost:4004/> adresini açın. `app/` altındaki internet bağlantısı gerektirmeyen arayüz, `/admin/Books` OData servisi üzerinden kitapları listeleme, ekleme, düzenleme ve silme işlemlerini yapar.
+
 ## Servisler
 
 - `GET /browse/Books`: Salt-okunur kitap kataloğu; yazar ve tür adları düzleştirilmiş olarak döner. Stoku 111'in üzerindeki kitap başlıklarına `%11 discount` bilgisi eklenir.

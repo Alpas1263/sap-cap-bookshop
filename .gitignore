@@ -21,6 +21,7 @@ mta_archives/
 *.mtar
 
 # Other
+*.zip
 .DS_Store
 Thumbs.db
 
