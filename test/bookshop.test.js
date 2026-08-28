@@ -2,19 +2,44 @@ import assert from 'node:assert/strict'
 import { after, before, test } from 'node:test'
 import { spawn } from 'node:child_process'
 import { once } from 'node:events'
+import { createServer } from 'node:net'
 
 let baseUrl
 let server
+let serverFailure
+let serverErrorOutput = ''
+
+async function getAvailablePort() {
+  const probe = createServer()
+  await new Promise((resolve, reject) => {
+    probe.once('error', reject)
+    probe.listen(0, '127.0.0.1', resolve)
+  })
+
+  const address = probe.address()
+  if (!address || typeof address === 'string') {
+    probe.close()
+    throw new Error('Could not determine an available TCP port')
+  }
+
+  await new Promise((resolve, reject) => {
+    probe.close(error => error ? reject(error) : resolve())
+  })
+  return address.port
+}
 
 async function waitForServer() {
-  for (let attempt = 0; attempt < 40; attempt++) {
+  const deadline = Date.now() + 10000
+  while (Date.now() < deadline) {
+    if (serverFailure) throw serverFailure
     try {
-      const response = await fetch(`${baseUrl}/`)
+      const response = await fetch(`${baseUrl}/`, { signal: AbortSignal.timeout(500) })
       if (response.ok) return
     } catch {}
     await new Promise(resolve => setTimeout(resolve, 250))
   }
-  throw new Error('CAP test server did not start in time')
+  const detail = serverErrorOutput.trim()
+  throw new Error(`CAP test server did not start within 10 seconds${detail ? `: ${detail}` : ''}`)
 }
 
 async function json(path, options) {
@@ -24,27 +49,40 @@ async function json(path, options) {
 }
 
 before(async () => {
+  const port = await getAvailablePort()
+  baseUrl = `http://127.0.0.1:${port}`
   server = spawn(process.execPath, ['node_modules/@sap/cds/bin/serve.js'], {
     cwd: process.cwd(),
-    env: { ...process.env, PORT: '0', NODE_ENV: 'test' },
-    stdio: ['ignore', 'pipe', 'pipe']
+    env: { ...process.env, PORT: String(port), NODE_ENV: 'test' },
+    stdio: ['ignore', 'ignore', 'pipe']
   })
 
-  baseUrl = await new Promise((resolve, reject) => {
-    const onData = data => {
-      const match = data.toString().match(/server listening on.*url: 'http:\/\/localhost:(\d+)'/)
-      if (match) resolve(`http://127.0.0.1:${match[1]}`)
+  server.stderr.on('data', data => { serverErrorOutput += data.toString() })
+  server.once('error', error => {
+    serverFailure = new Error(`CAP test server could not be started: ${error.message}`)
+  })
+  server.once('exit', (code, signal) => {
+    if (!server.killed) {
+      serverFailure = new Error(`CAP test server exited unexpectedly (code: ${code}, signal: ${signal})`)
     }
-    server.stdout.on('data', onData)
-    server.once('exit', code => reject(new Error(`CAP test server exited with code ${code}`)))
   })
   await waitForServer()
+  console.log(`CAP test server port: ${port}`)
 })
 
 after(async () => {
-  if (server && !server.killed) {
-    server.kill()
-    await Promise.race([once(server, 'exit'), new Promise(resolve => setTimeout(resolve, 2000))])
+  if (!server || server.exitCode !== null) return
+  server.kill()
+  const exited = await Promise.race([
+    once(server, 'exit').then(() => true),
+    new Promise(resolve => setTimeout(() => resolve(false), 2000))
+  ])
+  if (!exited && server.exitCode === null) {
+    server.kill('SIGKILL')
+    await Promise.race([
+      once(server, 'exit'),
+      new Promise(resolve => setTimeout(resolve, 1000))
+    ])
   }
 })
 
