@@ -1,144 +1,59 @@
 # SAP CAP Bookshop
 
-## Proje Hakkında
+SAP CAP/CDS 10 ve SQLite kullanan bir kitap yönetimi uygulamasıdır. CAP servisleri ile Vanilla HTML, CSS ve JavaScript tabanlı web arayüzü aynı yerel sunucuda çalışır.
 
-SAP CAP/CDS 10 ve SQLite kullanan bir kitap yönetimi uygulamasıdır. CAP servisleri ile Vanilla HTML, CSS ve JavaScript tabanlı CRUD arayüzü aynı yerel sunucuda çalışır. Kullanıcılar kitapları görüntüleyebilir, ekleyebilir, düzenleyebilir ve silebilir.
+## Özellikler
 
-Bu README, projeyi daha önce hiç bulunmadığı Windows 11 bilgisayarına Visual Studio Code üzerinden GitHub'dan indirip çalıştırmak için gereken tüm adımları içerir.
+- Kitapları yazar, tür, stok, fiyat ve para birimi bilgileriyle listeleme
+- Yeni kitap ekleme
+- Mevcut kitapları düzenleme
+- Onay alarak kitap silme
+- Yazar, tür ve para birimi verilerini CAP servislerinden yükleme
+- SQLite üzerinde kalıcı yerel veri saklama
+- CSV dosyalarından otomatik başlangıç verisi yükleme
+- Sipariş sırasında stoğu atomik olarak azaltan katalog aksiyonu
+- Bellek içi SQLite kullanan HTTP entegrasyon testleri
 
-## Gereksinimler
+## Kurulum
 
-- Windows 11
-- Git
-- Visual Studio Code
-- Node.js 22 veya üzeri
-- Node.js ile birlikte gelen npm
-- İlk indirme ve paket kurulumu için internet bağlantısı
+Projeyi sıfır bir Windows 11 bilgisayara kurmak için aşağıdaki ayrıntılı kurulum rehberini takip edin:
 
-Node.js 22 gereksinimi, projedeki `@sap/cds` 10 paketinin `package-lock.json` içinde tanımlanan `node >=22` koşulundan gelir.
+[📘 Windows 11 Sıfırdan Kurulum Rehberi](./KURULUM.md)
 
-Global `@sap/cds-dk`, ayrı bir SQLite programı veya veritabanı sunucusu kurmak gerekmez. CAP ve SQLite araçları projenin npm bağımlılıkları olarak yerel şekilde kurulur.
+Kurulum gereksinimleri, Visual Studio Code ile klonlama, doğru CAP/CDS komutları, SQLite deploy işlemi, başlangıç verilerinin kontrolü ve hata çözümleri bu rehberde açıklanmıştır. Kurulumun tek güncel kaynağı `KURULUM.md` dosyasıdır.
 
-Bu rehberde proje Visual Studio Code ile indirilecek, açılacak ve çalıştırılacaktır. Bu nedenle Visual Studio Code kurulumu gereklidir.
+## Hızlı Başlangıç
 
-Git ve Node.js kurulumlarını aşağıdaki resmi adreslerden yapabilirsiniz:
-
-- Git for Windows: <https://git-scm.com/download/win>
-- Visual Studio Code: <https://code.visualstudio.com/download>
-- Node.js: <https://nodejs.org/en/download>
-
-Programları kurduktan sonra Visual Studio Code'u kapatıp yeniden açın. VS Code içinde **Sol üstte 3 çizgi olacak oradan Terminal > New Terminal** seçeneğiyle bir terminal açıp sürümleri doğrulayın:
-
-```powershell
-git --version
-node --version
-npm.cmd --version
-```
-
-`node --version` çıktısı `v22` veya daha yüksek olmalıdır. VS Code'un PowerShell terminali `npm.ps1` dosyasını çalıştırmayı engelleyebildiği için Windows komutlarında güvenli biçimde `npm.cmd` ve `npx.cmd` kullanılmıştır.
-
-## 1. Projeyi VS Code ile GitHub'dan İndirme
-
-1. Visual Studio Code'u açın.
-2. `Ctrl+Shift+P` tuşlarına basarak Command Palette'i açın.
-3. **Git: Clone** komutunu seçin.
-4. Repository adresi istendiğinde şunu yapıştırın:
-
-   ```text
-   https://github.com/Alpas1263/sap-cap-bookshop.git
-   ```
-
-5. Projenin indirileceği üst klasörü seçin. VS Code burada `sap-cap-bookshop` klasörünü oluşturur.
-6. İndirme tamamlanınca çıkan bildirimde **Open** seçeneğine basın.
-7. VS Code çalışma alanına güvenip güvenmediğinizi sorarsa repository'yi doğruladıktan sonra **Yes, I trust the authors** seçeneğini kullanın.
-8. VS Code menüsünden **Terminal > New Terminal** ile proje terminalini açın.
-
-Terminalin doğru klasörde olduğunu kontrol edin:
-
-```powershell
-Get-ChildItem
-```
-
-Listede `package.json`, `package-lock.json`, `app`, `db` ve `srv` bulunmalıdır. Bundan sonraki bütün komutları bu VS Code terminalinde çalıştırın.
-
-## 2. Bağımlılıkları Kurma
-
-Projede `package-lock.json` bulunduğu için sıfır ve tekrarlanabilir kurulumda `npm ci` tercih edilir:
+> Ayrıntılı açıklamalar ve hata çözümleri için [KURULUM.md](./KURULUM.md) dosyasını takip edin. Aşağıdaki komutları `package.json` dosyasının bulunduğu proje kökünde, belirtilen sırayla çalıştırın.
 
 ```powershell
 npm.cmd ci
-```
-
-Bu işlem `node_modules` klasörünü oluşturur ve `@sap/cds` ile `@cap-js/sqlite` dahil kilit dosyasındaki paketleri kurar. `node_modules` GitHub'dan indirilmez ve Git tarafından izlenmez.
-
-Yerel CAP aracını doğrulayın:
-
-```powershell
-npx.cmd cds --version
-```
-
-Bu komut proje içindeki CAP bağımlılığını kullanır; global `cds` kurulumu gerektirmez.
-
-## 3. SQLite Veritabanını Oluşturma
-
-Proje, kök dizindeki kalıcı `db.sqlite` dosyasını kullanır. Bu dosya `.gitignore` içindeki `*.sqlite` kuralı nedeniyle GitHub'dan gelmez. Yeni bilgisayarda veritabanını oluşturmak için çalıştırın:
-
-```powershell
-npx.cmd cds deploy --to sqlite
-```
-
-PowerShell dışındaki bir terminalde aynı komut `npx cds deploy --to sqlite` şeklinde de çalıştırılabilir. `npx`, global paket yerine `npm ci` ile kurulan proje bağımlılığını kullanır.
-
-Komut:
-
-- `db/schema.cds` modelinden SQLite tablolarını oluşturur.
-- `db/data/` altındaki kitap, yazar, tür ve para birimi CSV dosyalarını otomatik yükler.
-- Proje kökünde `db.sqlite` dosyasını üretir.
-
-CSV dosyalarını elle içe aktarmayın. `npx cds deploy` yerine hedefi açıkça belirten `npx.cmd cds deploy --to sqlite` komutunu kullanın.
-
-> Bu deploy komutu sıfır kurulum içindir. İçinde önemli yerel veriler bulunan mevcut bir `db.sqlite` üzerinde yeniden deploy etmek verileri yeniden kurabilir.
-
-## 4. Projeyi Çalıştırma
-
-Normal kullanım için önerilen komut:
-
-```powershell
+npx.cmd -p @sap/cds-dk@10 cds --version
+npx.cmd -p @sap/cds-dk@10 cds deploy --to sqlite
+Test-Path .\db.sqlite
 npm.cmd start
 ```
 
-Bu script `package.json` içindeki `cds-serve` komutunu çalıştırır.
+İlk `npx.cmd -p` kullanımında npm paket indirme onayı sorarsa `y` yazıp `Enter` tuşuna basın. `Test-Path .\db.sqlite` çıktısı `True` olmalıdır. Deploy başarısızsa veya `db.sqlite` oluşmadıysa uygulamayı başlatmayın.
 
-Geliştirme sırasında dosya değişikliklerini izleyip sunucuyu otomatik yenilemek için:
-
-```powershell
-npm.cmd run watch
-```
-
-İki komuttan yalnızca birini çalıştırın. Sunucu açık kalacağı için terminali kapatmayın. Durdurmak için terminalde `Ctrl+C` tuşlarına basın.
-
-## 5. Tarayıcıdan Açma
-
-CAP'in varsayılan portu başka bir ayarla değiştirilmediyse uygulamayı şu adresten açın:
+Sunucu başladıktan sonra uygulamayı açın:
 
 <http://localhost:4004/>
 
-Bu adres `app/` klasöründeki kitap yönetimi arayüzünü gösterir. Başlangıç CSV verileri doğru yüklenmişse beş kitap kaydı görünür.
-
-## 6. Servisler
+## Servisler
 
 - `GET /admin/Books`: Kitapları listeler.
-- `POST /admin/Books`: Kitap oluşturur.
+- `POST /admin/Books`: Yeni kitap oluşturur.
 - `PATCH /admin/Books(<ID>)`: Kitabı günceller.
 - `DELETE /admin/Books(<ID>)`: Kitabı siler.
 - `/admin/Authors`: Yazarları ve kitap ilişkilerini sunar.
 - `/admin/Genres`: Hiyerarşik tür kayıtlarını sunar.
-- `/admin/Currencies`: Arayüzün para birimi listesini sağlar.
+- `/admin/Currencies`: Para birimi listesini sağlar.
 - `GET /browse/Books`: Yazar ve tür adları düzleştirilmiş salt okunur kataloğu sunar.
-- `POST /browse/submitOrder`: Kitap ID'si ve pozitif tam sayı miktarı alarak stoğu atomik biçimde azaltır; kimliği doğrulanmış kullanıcı gerektirir.
+- `POST /browse/submitOrder`: Kitap ID'si ve pozitif miktar alarak stoğu atomik biçimde azaltır.
 - `/admin/$metadata` ve `/browse/$metadata`: OData V4 servis tanımlarıdır.
 
-Tarayıcıda denenebilecek örnek adresler:
+Örnek sorgular:
 
 ```text
 http://localhost:4004/admin/Books?$select=ID,title,stock,price
@@ -146,7 +61,7 @@ http://localhost:4004/browse/Books?$select=ID,title,author,genre,stock
 http://localhost:4004/admin/Authors?$select=ID,name&$expand=books($select=ID,title)
 ```
 
-## 7. Testler
+## Testler
 
 Testleri proje kökünde çalıştırın:
 
@@ -154,119 +69,50 @@ Testleri proje kökünde çalıştırın:
 npm.cmd test
 ```
 
-Test scripti Node.js'in yerleşik test aracını kullanır. Test kodu boş bir port seçerek geçici CAP sunucusunu başlatır ve test profilindeki `:memory:` SQLite veritabanını kullanır. Bu nedenle proje kökündeki kalıcı `db.sqlite` dosyasını değiştirmez veya silmez.
+Testler dinamik olarak seçilen boş bir portta geçici CAP sunucusu başlatır ve `:memory:` SQLite veritabanını kullanır. Proje kökündeki kalıcı `db.sqlite` dosyasını değiştirmez.
 
-Testler katalog sorgularını, entity ilişkilerini, siparişle stok azaltmayı ve yönetim servisi doğrulamalarını kontrol eder.
+Mevcut doğrulama sonucu:
 
-> Mevcut `2` branch'i doğrulanırken 4 testten 3'ü geçti. `admin constraints reject invalid book data` testi, servis `400` döndürürken test `412` beklediği için başarısız oldu. Bu, kurulum veya SQLite deploy hatası değil; branch'teki test beklentisi ile mevcut CAP yanıtı arasındaki uyuşmazlıktır.
+- 4 test
+- 3 başarılı
+- 1 başarısız
 
-## Daha Sonra Tekrar Çalıştırma
-
-Bilgisayar yeniden başlatıldığında paketleri ve veritabanını tekrar kurmanız gerekmez:
-
-```powershell
-cd "C:\Users\KULLANICI_ADINIZ\Documents\sap-cap-bookshop"
-npm.cmd start
-```
-
-## GitHub'dan Güncellemeleri Alma
-
-Önce yerel değişiklikleri kontrol edin:
-
-```powershell
-git status
-```
-
-Çalışma alanı temizse açık branch'in güncellemelerini alın:
-
-```powershell
-git pull
-```
-
-`package-lock.json` değiştiyse ardından `npm.cmd ci` çalıştırın. Yerel değişiklik varken `git pull` çakışmaya yol açabilir; değişikliklerinizi silmeden önce commit etme veya güvenli biçimde saklama kararı verin.
-
-## Sorun Giderme
-
-### `git`, `node` veya `npm` bulunamıyor
-
-Kurulumdan sonra açık terminalleri ve VS Code'u kapatıp yeniden açın. Komutları tekrar deneyin. Sorun sürerse programları kurarken PATH seçeneğinin etkin olduğundan emin olun.
-
-### PowerShell `npm.ps1` hatası veriyor
-
-Yürütme politikasını değiştirmek yerine bu README'deki gibi `npm.cmd` ve `npx.cmd` kullanın.
-
-### `cds` bulunamıyor
-
-Global `cds` kullanmayın. Önce bağımlılıkları kurup yerel aracı çağırın:
-
-```powershell
-npm.cmd ci
-npx.cmd cds --version
-```
-
-### `db.sqlite` oluşmadı veya başlangıç kayıtları yok
-
-`package.json` dosyasının bulunduğu proje kökünde olduğunuzu doğrulayıp çalıştırın:
-
-```powershell
-npx.cmd cds deploy --to sqlite
-```
-
-### `localhost:4004` açılmıyor
-
-`npm.cmd start` terminalindeki hata mesajlarını kontrol edin. Terminal kapandıysa sunucu da kapanmıştır. `https` yerine `http://localhost:4004/` adresini kullanın.
-
-### Port 4004 kullanımda
-
-Önce başka bir terminalde çalışan CAP sunucusu varsa `Ctrl+C` ile durdurun. Portu geçici değiştirmek gerekirse:
-
-```powershell
-$env:PORT=4005
-npm.cmd start
-```
-
-Uygulamayı bu kez <http://localhost:4005/> adresinden açın.
-
-### Paket kurulumu başarısız oluyor
-
-İnternet, proxy ve VPN ayarlarını kontrol edip `npm.cmd ci` komutunu yeniden deneyin. Hata mesajını incelemeden `package-lock.json` dosyasını silmeyin.
+Başarısız test `admin constraints reject invalid book data` testidir. Servis `400` döndürürken test `412` beklemektedir. Bu durum kurulum veya SQLite deploy problemi değil, test beklentisi ile mevcut CAP yanıtı arasındaki uyuşmazlıktır.
 
 ## Proje Yapısı
 
 ```text
 sap-cap-bookshop/
-├── .vscode/             # VS Code görevleri ve önerilen eklentiler
-├── app/                 # Vanilla HTML/CSS/JavaScript CRUD arayüzü
+├── .vscode/             # VS Code görevleri ve eklenti önerileri
+├── app/
+│   ├── index.html       # Kitap yönetimi sayfası
+│   ├── app.js           # CRUD işlemleri ve servis istekleri
+│   └── style.css        # Arayüz tasarımı
 ├── db/
 │   ├── schema.cds       # Books, Authors ve Genres veri modeli
-│   └── data/            # Otomatik yüklenen CSV başlangıç verileri
-├── srv/                 # Admin ve katalog CAP servisleri
-├── test/                # İzole HTTP entegrasyon testleri
+│   └── data/            # CSV başlangıç verileri
+├── srv/
+│   ├── admin-service.cds
+│   ├── admin-constraints.cds
+│   ├── cat-service.cds
+│   └── cat-service.js
+├── test/
+│   └── bookshop.test.js # HTTP entegrasyon testleri
 ├── .gitignore
-├── package.json         # npm scriptleri ve CAP/SQLite yapılandırması
-├── package-lock.json    # Kilitlenmiş npm bağımlılıkları
+├── package.json
+├── package-lock.json
+├── KURULUM.md           # Ayrıntılı Windows 11 kurulum rehberi
 └── README.md
 ```
 
-`db.sqlite` ve `node_modules` kurulum sırasında yerelde oluşur, GitHub'dan gelmez. `node-ogrenme/` klasörü Bookshop uygulamasının parçası değildir.
+`node_modules` ve `db.sqlite` kurulum sırasında yerelde oluşturulur ve Git'e eklenmez. `node-ogrenme/` klasörü Bookshop uygulamasının parçası değildir.
 
-## Ekran Görüntüleri
+## Teknolojiler
 
-Projeye ait doğrulanmış ekran görüntüleri henüz repository'de bulunmadığı için bu bölüm daha sonra eklenecektir.
-
-## Hızlı Kurulum Özeti
-
-Sıfır Windows 11 bilgisayarda temel sıra:
-
-1. Git, Visual Studio Code ve Node.js 22 veya üzerini kurun.
-2. VS Code'da `Ctrl+Shift+P` → **Git: Clone** ile `https://github.com/Alpas1263/sap-cap-bookshop.git` adresini klonlayın.
-3. İndirilen projeyi VS Code'da açın.
-4. **Terminal > New Terminal** ile terminal açıp sırasıyla çalıştırın:
-
-   ```powershell
-   npm.cmd ci
-   npx.cmd cds deploy --to sqlite
-   npm.cmd start
-   ```
-
-5. <http://localhost:4004/> adresini açın.
+- Node.js 22 veya üzeri
+- SAP CAP / `@sap/cds` 10
+- `@cap-js/sqlite` 3
+- SQLite
+- OData V4
+- Vanilla HTML, CSS ve JavaScript
+- Node.js yerleşik test runner
