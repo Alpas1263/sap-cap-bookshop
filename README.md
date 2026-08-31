@@ -4,7 +4,7 @@
 
 SAP CAP/CDS 10 ve SQLite kullanan bir kitap yönetimi uygulamasıdır. CAP servisleri ile Vanilla HTML, CSS ve JavaScript tabanlı CRUD arayüzü aynı yerel sunucuda çalışır. Kullanıcılar kitapları görüntüleyebilir, ekleyebilir, düzenleyebilir ve silebilir.
 
-Bu README, projeyi daha önce hiç bulunmadığı Windows 11 bilgisayarına GitHub'dan indirip çalıştırmak için gereken tüm adımları içerir.
+Bu README, projeyi daha önce hiç bulunmadığı Windows 11 bilgisayarına Visual Studio Code üzerinden GitHub'dan indirip çalıştırmak için gereken tüm adımları içerir.
 
 ## Gereksinimler
 
@@ -19,13 +19,15 @@ Node.js 22 gereksinimi, projedeki `@sap/cds` 10 paketinin `package-lock.json` i�
 
 Global `@sap/cds-dk`, ayrı bir SQLite programı veya veritabanı sunucusu kurmak gerekmez. CAP ve SQLite araçları projenin npm bağımlılıkları olarak yerel şekilde kurulur.
 
+Bu rehberde proje Visual Studio Code ile indirilecek, açılacak ve çalıştırılacaktır. Bu nedenle Visual Studio Code kurulumu gereklidir.
+
 Git ve Node.js kurulumlarını aşağıdaki resmi adreslerden yapabilirsiniz:
 
 - Git for Windows: <https://git-scm.com/download/win>
 - Visual Studio Code: <https://code.visualstudio.com/download>
 - Node.js: <https://nodejs.org/en/download>
 
-Kurulumdan sonra yeni bir PowerShell veya VS Code terminali açıp sürümleri doğrulayın:
+Programları kurduktan sonra Visual Studio Code'u kapatıp yeniden açın. VS Code içinde **Terminal > New Terminal** seçeneğiyle bir terminal açıp sürümleri doğrulayın:
 
 ```powershell
 git --version
@@ -33,25 +35,31 @@ node --version
 npm.cmd --version
 ```
 
-`node --version` çıktısı `v22` veya daha yüksek olmalıdır. PowerShell, `npm.ps1` dosyasını çalıştırmayı engelleyebildiği için Windows komutlarında güvenli biçimde `npm.cmd` ve `npx.cmd` kullanılmıştır.
+`node --version` çıktısı `v22` veya daha yüksek olmalıdır. VS Code'un PowerShell terminali `npm.ps1` dosyasını çalıştırmayı engelleyebildiği için Windows komutlarında güvenli biçimde `npm.cmd` ve `npx.cmd` kullanılmıştır.
 
-## 1. GitHub'dan Projeyi İndirme
+## 1. Projeyi VS Code ile GitHub'dan İndirme
 
-PowerShell'i açın ve projeyi koymak istediğiniz klasöre geçin. Yolda boşluk varsa çift tırnak kullanın:
+1. Visual Studio Code'u açın.
+2. `Ctrl+Shift+P` tuşlarına basarak Command Palette'i açın.
+3. **Git: Clone** komutunu seçin.
+4. Repository adresi istendiğinde şunu yapıştırın:
 
-```powershell
-cd "C:\Users\KULLANICI_ADINIZ\Documents"
-git clone https://github.com/Alpas1263/sap-cap-bookshop.git
-cd sap-cap-bookshop
-```
+   ```text
+   https://github.com/Alpas1263/sap-cap-bookshop.git
+   ```
 
-Doğru klasörde olduğunuzu kontrol edin:
+5. Projenin indirileceği üst klasörü seçin. VS Code burada `sap-cap-bookshop` klasörünü oluşturur.
+6. İndirme tamamlanınca çıkan bildirimde **Open** seçeneğine basın.
+7. VS Code çalışma alanına güvenip güvenmediğinizi sorarsa repository'yi doğruladıktan sonra **Yes, I trust the authors** seçeneğini kullanın.
+8. VS Code menüsünden **Terminal > New Terminal** ile proje terminalini açın.
+
+Terminalin doğru klasörde olduğunu kontrol edin:
 
 ```powershell
 Get-ChildItem
 ```
 
-Listede `package.json`, `package-lock.json`, `app`, `db` ve `srv` bulunmalıdır. Bundan sonraki bütün komutları bu proje kökünde çalıştırın.
+Listede `package.json`, `package-lock.json`, `app`, `db` ve `srv` bulunmalıdır. Bundan sonraki bütün komutları bu VS Code terminalinde çalıştırın.
 
 ## 2. Bağımlılıkları Kurma
 
@@ -250,12 +258,15 @@ Projeye ait doğrulanmış ekran görüntüleri henüz repository'de bulunmadı�
 
 Sıfır Windows 11 bilgisayarda temel sıra:
 
-```powershell
-git clone https://github.com/Alpas1263/sap-cap-bookshop.git
-cd sap-cap-bookshop
-npm.cmd ci
-npx.cmd cds deploy --to sqlite
-npm.cmd start
-```
+1. Git, Visual Studio Code ve Node.js 22 veya üzerini kurun.
+2. VS Code'da `Ctrl+Shift+P` → **Git: Clone** ile `https://github.com/Alpas1263/sap-cap-bookshop.git` adresini klonlayın.
+3. İndirilen projeyi VS Code'da açın.
+4. **Terminal > New Terminal** ile terminal açıp sırasıyla çalıştırın:
 
-Ardından <http://localhost:4004/> adresini açın.
+   ```powershell
+   npm.cmd ci
+   npx.cmd cds deploy --to sqlite
+   npm.cmd start
+   ```
+
+5. <http://localhost:4004/> adresini açın.
