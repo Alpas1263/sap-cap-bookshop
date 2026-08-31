@@ -16,9 +16,9 @@ SAP CAP/CDS 10 ve SQLite kullanan bir kitap yönetimi uygulamasıdır. CAP servi
 
 ## Kurulum
 
-Projeyi sıfır bir Windows 11 bilgisayara kurmak için aşağıdaki ayrıntılı kurulum rehberini takip edin:
+Projeyi bir Windows bilgisayara kurmak için aşağıdaki ayrıntılı kurulum rehberini takip edin:
 
-[📘 Windows 11 Sıfırdan Kurulum Rehberi](./KURULUM.md)
+[📘 Kurulum Rehberi](./KURULUM.md)
 
 Kurulum gereksinimleri, Visual Studio Code ile klonlama, doğru CAP/CDS komutları, SQLite deploy işlemi, başlangıç verilerinin kontrolü ve hata çözümleri bu rehberde açıklanmıştır. Kurulumun tek güncel kaynağı `KURULUM.md` dosyasıdır.
 
@@ -101,7 +101,7 @@ sap-cap-bookshop/
 ├── .gitignore
 ├── package.json
 ├── package-lock.json
-├── KURULUM.md           # Ayrıntılı Windows 11 kurulum rehberi
+├── KURULUM.md           # Ayrıntılı kurulum rehberi
 └── README.md
 ```
 

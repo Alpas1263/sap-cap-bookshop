@@ -1,6 +1,6 @@
-# SAP CAP Bookshop – Windows 11 Sıfırdan Kurulum
+# SAP CAP Bookshop – Kurulum
 
-Bu rehber, Git, Node.js, SAP CAP ve proje daha önce hiç kurulmamış temiz bir Windows 11 bilgisayarda uygulamayı GitHub'dan indirip çalıştırmak için hazırlanmıştır. Adımları sırayla uygulayın. Özellikle SQLite deploy tamamlanmadan uygulamayı başlatmayın.
+Bu rehber, Git, Node.js, SAP CAP ve proje daha önce kurulmamış bir Windows bilgisayarda uygulamayı GitHub'dan indirip çalıştırmak için hazırlanmıştır. Adımları sırayla uygulayın. Özellikle SQLite deploy tamamlanmadan uygulamayı başlatmayın.
 
 ## 1. Gereksinimler
 
@@ -28,6 +28,10 @@ Ayrı bir SQLite programı veya veritabanı sunucusu kurulmaz. SQLite desteği p
 3. Kurulumu varsayılan seçeneklerle tamamlayın.
 4. Kurulumdan sonra Visual Studio Code açıksa kapatıp yeniden açın.
 
+İndirme sayfasında **Windows** sekmesindeki güncel x64 sürüm bağlantısını kullanın:
+
+![Git for Windows indirme sayfasındaki güncel x64 sürüm bağlantısı](./resimler/git_yesil0.png)
+
 Git, repository'yi GitHub'dan klonlamak ve daha sonra güncellemeleri almak için gereklidir.
 
 ## 3. Visual Studio Code Kurulumu
@@ -36,6 +40,10 @@ Git, repository'yi GitHub'dan klonlamak ve daha sonra güncellemeleri almak içi
 2. Windows için Visual Studio Code kurulum dosyasını indirin.
 3. Kurulumu tamamlayın.
 4. Visual Studio Code'u açın.
+
+İndirme sayfasında Windows için uygun kullanıcı veya sistem kurulum dosyasını seçin:
+
+![Visual Studio Code indirme sayfasındaki Windows seçenekleri](./resimler/vscode_pembe.png)
 
 Projeyi klonlama, proje klasörünü açma ve komutları çalıştırma işlemleri Visual Studio Code üzerinden yapılacaktır.
 
@@ -46,11 +54,17 @@ Projeyi klonlama, proje klasörünü açma ve komutları çalıştırma işlemle
 3. Kurulum sırasında npm ve PATH seçeneklerini etkin bırakın.
 4. Kurulum tamamlandığında Visual Studio Code'u kapatıp yeniden açın.
 
+Windows ve bilgisayarınızın mimarisi seçiliyken **Windows Installer (.msi)** düğmesini kullanın:
+
+![Node.js indirme sayfasındaki Windows Installer seçeneği](./resimler/node_turuncu.png)
+
 Node.js 20 veya daha eski bir sürüm kullanmayın; projedeki CAP 10 bağımlılığı Node.js 22 veya üzerini gerektirir.
 
 ## 5. Kurulumların Doğrulanması
 
 Visual Studio Code'da üst menüden **Terminal > New Terminal** seçeneğini açın. Aşağıdaki komutlar herhangi bir klasörde çalıştırılabilir:
+
+![Visual Studio Code üst menüsündeki Terminal seçeneği](./resimler/terminal0.png)
 
 ```powershell
 git --version
@@ -64,20 +78,34 @@ Beklenen sonuçlar:
 - `node --version` çıktısı `v22` veya daha yüksek olmalıdır.
 - `npm.cmd --version` bir npm sürümü göstermelidir.
 
+Terminalde Git, Node.js ve npm sürümleri aşağıdakine benzer şekilde görünmelidir:
+
+![Git, Node.js ve npm sürüm kontrolü sonuçları](./resimler/versiyon_bakma0.png)
+
 PowerShell'de `npm` komutu `npm.ps1 cannot be loaded` hatası verebilir. ExecutionPolicy ayarını değiştirmeyin; bu rehberdeki `npm.cmd` ve `npx.cmd` komutlarını kullanın.
 
 ## 6. Projeyi GitHub'dan Klonlama
 
 1. Visual Studio Code'da `Ctrl+Shift+P` tuşlarına basın.
 2. Açılan Command Palette'e `Git: Clone` yazıp **Git: Clone** komutunu seçin.
+
+   ![Visual Studio Code Command Palette içinde Git Clone komutu](./resimler/Ctrl+Shift+P0.png)
+
 3. Aşağıdaki gerçek repository adresini yapıştırın:
 
    ```text
    https://github.com/Alpas1263/sap-cap-bookshop.git
    ```
 
+   URL'yi girdikten sonra **Clone from URL** seçeneğini onaylayın:
+
+   ![Visual Studio Code Git Clone alanına repository URL'sinin girilmesi](./resimler/git_clone0.png)
+
 4. Projenin indirileceği üst klasörü seçin. VS Code burada `sap-cap-bookshop` klasörünü oluşturur.
 5. Klonlama tamamlanınca **Open** seçeneğine basın.
+
+   ![Klonlama tamamlandıktan sonra repository'yi açma iletişim kutusu](./resimler/open0.png)
+
 6. Güven sorusu gösterilirse repository adresini kontrol ettikten sonra **Yes, I trust the authors** seçeneğini kullanın.
 
 Alternatif olarak VS Code terminalinde, projeyi koymak istediğiniz üst klasörde şu komut kullanılabilir:
@@ -116,6 +144,10 @@ Repository'de `package-lock.json` bulunduğu için temiz kurulumda kilitlenmiş 
 npm.cmd ci
 ```
 
+Komutu proje kökünü gösteren terminal satırında çalıştırın:
+
+![Visual Studio Code terminalinde npm.cmd ci komutunun çalıştırılması](<./resimler/npm.cmd ci000.png>)
+
 Komut başarıyla bitmeden sonraki adıma geçmeyin. İşlem sonunda `node_modules` klasörü oluşur:
 
 ```powershell
@@ -123,6 +155,10 @@ Test-Path .\node_modules
 Test-Path .\node_modules\@sap\cds
 Test-Path .\node_modules\@cap-js\sqlite
 ```
+
+Başarılı kurulumda bu üç kontrolün sonucu da `True` görünür:
+
+![node_modules ve gerekli CAP paketleri için üç başarılı Test-Path sonucu](./resimler/3true0.png)
 
 Üç komut da `True` döndürmelidir. `node_modules` GitHub'dan gelmez; `npm.cmd ci` tarafından yerelde oluşturulur ve `.gitignore` nedeniyle Git'e eklenmez.
 
@@ -143,6 +179,10 @@ Need to install the following packages:
 @sap/cds-dk@10.x.x
 Ok to proceed? (y)
 ```
+
+Bu soru görüntülendiğinde paket adı `@sap/cds-dk@10` olarak görünmelidir:
+
+![CDS sürüm komutunda sap cds-dk paket indirme onayı](./resimler/npx.png)
 
 `y` yazıp `Enter` tuşuna basın. Komut CAP/CDS sürüm bilgilerini göstermelidir. Global `@sap/cds-dk` kurmayın.
 
@@ -167,9 +207,15 @@ npx.cmd -p @sap/cds-dk@10 cds deploy --to sqlite
 
 İlk CDS komutunda henüz onay vermediyseniz npm paket indirme sorusuna `y` ile onay verin. Başarılı çıktının sonunda şuna benzer bir satır görülmelidir:
 
+![SQLite deploy komutunda sap cds-dk paket indirme onayına y yazılması](./resimler/npx_y.png)
+
 ```text
 successfully deployed to db.sqlite
 ```
+
+Deploy tamamlandığında CSV başlangıç verileri işlenir ve terminalde başarı satırı görünür:
+
+![CSV başlangıç verileri yüklendikten sonra db.sqlite deploy başarı sonucu](<./resimler/successfully deployed to db.sqlite0.png>)
 
 Komut başarısız olursa uygulamayı başlatmayın. Önce hata mesajını çözün ve deploy komutunu yeniden çalıştırın.
 
@@ -268,6 +314,8 @@ Yalnızca ana sayfanın açılması yeterli değildir. Aşağıdakilerin tamamı
 - **Yeni Kitap Ekle** düğmesine basıldığında yazar listesi yükleniyor.
 - Aynı formda tür listesi yükleniyor.
 - Para birimi listesinde EUR, GBP ve USD seçenekleri yükleniyor.
+- CRUD arayüzünde kitap ekleme, düzenleme ve silme işlemleri çalışıyor.
+- Uygulama kapatılıp bilgisayar yeniden açılsa da `db.sqlite` içindeki eklenen kayıtlar korunuyor, silinen kayıtlar silinmiş olarak kalıyor.
 - `/admin/Books`, `/admin/Authors`, `/admin/Genres` ve `/admin/Currencies` adresleri JSON yanıtı veriyor.
 - Tarayıcıda veya terminalde `no such table` hatası bulunmuyor.
 
