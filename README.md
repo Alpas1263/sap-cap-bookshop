@@ -4,7 +4,7 @@ SAP CAP/CDS 10 ve SQLite kullanan kitap yönetimi uygulamasıdır. Backend servi
 
 ## Gereksinimler
 
-- Node.js 22 veya üzeri
+- Node.js 22 veya 
 - npm
 
 Global `@sap/cds-dk` kurulumu gerekli değildir; proje komutları yerel npm bağımlılıklarını kullanır.
