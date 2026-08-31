@@ -135,4 +135,3 @@ bookshop/
 `node-ogrenme/` kişisel Node.js alıştırmalarını içerir ve Bookshop uygulamasının parçası değildir.
 
 Model ve servis yaklaşımı SAP'nin resmi [CAP Bookshop öğreticisini](https://cap.cloud.sap/docs/get-started/bookshop) temel alır.
-![Proje ekran görüntüsü](./mc12122.png)
