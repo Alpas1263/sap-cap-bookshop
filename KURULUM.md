@@ -62,7 +62,7 @@ Node.js 20 veya daha eski bir sürüm kullanmayın; projedeki CAP 10 bağımlıl
 
 ## 5. Kurulumların Doğrulanması
 
-Visual Studio Code'da üst menüden **Terminal > New Terminal** seçeneğini açın. Aşağıdaki komutlar herhangi bir klasörde çalıştırılabilir:
+Visual Studio Code'da terminali açın. Aşağıdaki komutlar herhangi bir klasörde çalıştırılabilir:
 
 ![Visual Studio Code üst menüsündeki Terminal seçeneği](./resimler/terminal0.png)
 
