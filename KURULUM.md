@@ -17,7 +17,7 @@ Projede kullanılan temel paketler:
 - `@sap/cds` 10.0.5
 - `@cap-js/sqlite` 3.0.2
 
-`@sap/cds` 10, Node.js `>=22` gerektirir. Projede `@sap/cds-dk` bağımlılığı bulunmadığı için doğrudan `npx.cmd cds ...` komutu temiz bilgisayarda çalışmaz. Bu rehber, CDS geliştirme aracını gerektiğinde geçici olarak indiren `npx.cmd -p @sap/cds-dk@10 ...` biçimini kullanır. Global `@sap/cds-dk` kurulumu zorunlu değildir.
+`@sap/cds` 10, Node.js `>=22` gerektirir. Projede `@sap/cds-dk` bağımlılığı bulunmadığı için paket belirtilmeden yapılan doğrudan CDS CLI çağrısı temiz bilgisayarda çalışmaz. Bu rehber, CDS geliştirme aracını gerektiğinde geçici olarak indiren `npx.cmd -p @sap/cds-dk@10 ...` biçimini kullanır. Global `@sap/cds-dk` kurulumu zorunlu değildir.
 
 Ayrı bir SQLite programı veya veritabanı sunucusu kurulmaz. SQLite desteği projenin `@cap-js/sqlite` bağımlılığından gelir.
 
@@ -146,13 +146,7 @@ Ok to proceed? (y)
 
 `y` yazıp `Enter` tuşuna basın. Komut CAP/CDS sürüm bilgilerini göstermelidir. Global `@sap/cds-dk` kurmayın.
 
-Şu komutu kullanmayın:
-
-```powershell
-npx.cmd cds --version
-```
-
-Temiz bilgisayarda bu komut `npm error could not determine executable to run` hatası verebilir; çünkü projedeki `@sap/cds` paketi `cds` adlı genel CLI çalıştırıcısını sağlamaz.
+`-p @sap/cds-dk@10` bölümünü komuttan çıkarmayın. Paket belirtilmeden yapılan çağrı temiz bilgisayarda `npm error could not determine executable to run` hatası verebilir; çünkü projedeki `@sap/cds` paketi `cds` adlı genel CLI çalıştırıcısını sağlamaz.
 
 ## 10. SQLite Veritabanını Oluşturma
 
@@ -372,7 +366,7 @@ biçimini kullanın.
 
 ### `npm error could not determine executable to run`
 
-Bu hata genellikle `npx.cmd cds ...` kullanıldığında oluşur. Projede `@sap/cds-dk` yerel bağımlılığı yoktur. Doğru komut:
+Bu hata genellikle `-p @sap/cds-dk@10` paket seçimi yazılmadan CDS çağrıldığında oluşur. Projede `@sap/cds-dk` yerel bağımlılığı yoktur. Doğru komut:
 
 ```powershell
 npx.cmd -p @sap/cds-dk@10 cds --version
