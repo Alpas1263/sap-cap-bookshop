@@ -24,10 +24,13 @@ Bu rehberde proje Visual Studio Code ile indirilecek, açılacak ve çalıştır
 Git ve Node.js kurulumlarını aşağıdaki resmi adreslerden yapabilirsiniz:
 
 - Git for Windows: <https://git-scm.com/download/win>
+<video src="./Videolar/git-for-windows.mp4" controls width="900">
+  Tarayıcınız video etiketini desteklemiyor.
+</video>
 - Visual Studio Code: <https://code.visualstudio.com/download>
 - Node.js: <https://nodejs.org/en/download>
 
-Programları kurduktan sonra Visual Studio Code'u kapatıp yeniden açın. VS Code içinde **Terminal > New Terminal** seçeneğiyle bir terminal açıp sürümleri doğrulayın:
+Programları kurduktan sonra Visual Studio Code'u kapatıp yeniden açın. VS Code içinde **Sol üstte 3 çizgi olacak oradan Terminal > New Terminal** seçeneğiyle bir terminal açıp sürümleri doğrulayın:
 
 ```powershell
 git --version
