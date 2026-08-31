@@ -24,9 +24,6 @@ Bu rehberde proje Visual Studio Code ile indirilecek, açılacak ve çalıştır
 Git ve Node.js kurulumlarını aşağıdaki resmi adreslerden yapabilirsiniz:
 
 - Git for Windows: <https://git-scm.com/download/win>
-
-  [▶ Git for Windows kurulum videosunu oynat](https://github.com/Alpas1263/sap-cap-bookshop/raw/refs/heads/2/Videolar/git-for-windows.mp4)
-
 - Visual Studio Code: <https://code.visualstudio.com/download>
 - Node.js: <https://nodejs.org/en/download>
 
