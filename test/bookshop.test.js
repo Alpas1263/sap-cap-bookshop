@@ -159,5 +159,5 @@ test('admin constraints reject invalid book data', async () => {
       stock: 0, price: 112, currency_code: 'EUR'
     })
   })
-  assert.equal(invalidRanges.response.status, 400)
+  assert.equal(invalidRanges.response.status, 412)
 })
